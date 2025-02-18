@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חישוב סכום למשיכה</title>
+	<style>
+		body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: right;
+	height:auto;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	
+}
+h1{color:darkblue; text-align:center;width:100vw;
+margin-bottom:0px;}
+h2{color:green;text-align:center;width:100vw;margin-bottom:10px;}
+.container{display:flex;
+	flex-direction:column;
+	align-items:center;
+	width:100vw;
+	height:auto;
+	background-color:#f9f9f9
+	}
+
+#loanForm{width:100vw;height:auto;
+	display:flex;
+	flex-direction:column;
+	align-items:center;}
+.lbldiv,input{width:50vw;height:30px;text-align:center;font-size:16px;box-sizing:border-box;
+max-width:640px;}
+input{margin-bottom:15px;display:flex;align-items:center;}
+.lbldiv{background-color:blue;color:white;line-height:30px;vertical-align:middle;}
+
+.buttons{width:50vw;display:flex;justify-content:center;max-width:640px;}
+	
+#submitdata{width:120px;height:30px;background-color:green;color:white;border:none;margin-left:50px;}
+#clearall{width:120px;height:30px;background-color:orange;color:white;border:none;}
+
+.alltables{display:flex;
+	flex-direction:column;
+	align-items:center;
+	width:50vw;
+	height:auto;
+	background-color:#f9f9f9;
+	max-width:640px;}
+
+table, tr{width:50vw;border-collapse:collapse;max-width:600px;}
+.kotkot{background-color:blue;color:white;line-height:30px;vertical-align:middle;text-align:center;}
+.tdnos{width:35vw;padding-right:10px;max-width:480px;}
+.tdtoz{width:15vw;text-align:center;max-width:160px;}
+
+#clearall,#tozaa,#tbltozaa,#aftertozaa,#tbltAfter{display:none;}
+@media only screen and (max-width:992px){
+		.lbldiv,input,.buttons,.alltables, table, tr{width:60vw;max-width:640px;}
+	.tdnos{width:53.5vw;max-width:480px;}
+	.tdtoz{width:17.5vw;max-width:160px;}
+}
+@media only screen and (max-width:600px){
+		.lbldiv,input,.buttons,.alltables, table, tr{width:90vw;}
+	.tdnos{width:67.5vw;max-width:480px;}
+	.tdtoz{width:22.5vw;max-width:160px;}
+}
+
+
+	
+	</style>
+</head>
+<body dir="rtl">
+
+    <div class="container">
+        <h1> משיכה בקיזוז הלוואה</h1>
+        <h2 id="netunim" >הקלד נתונים</h2>
+        <div id="loanForm">
+            
+                <div  class="lbldiv">סכום צבירה קיים</div>
+                <input oninput="formatNumber(this)" type="text" id="zvira" placeholder="הקלד סכום צבירה">
+           
+                <div  class="lbldiv">סכום הלוואה קיים</div>
+                <input oninput="formatNumber(this)" type="text" id="loanAmount" placeholder="הקלד סכום הלוואה">
+				
+                <div  class="lbldiv">יתרה לא נזילה</div>
+                <input oninput="formatNumber(this)" type="text" id="illiquidBalance" placeholder="הקלד יתרה לא נזילה">
+            
+            
+                <div  class="lbldiv">יתרה נזילה מנייתית</div>
+                <input oninput="formatNumber(this)" type="text" id="liquidBalanceStock" placeholder="הקלד יתרה נזילה מנייתית">
+            
+            
+                <div  class="lbldiv">יתרה נזילה לא מנייתית</div>
+                <input oninput="formatNumber(this)" type="text" id="liquidBalanceNonStock" placeholder="הקלד יתרה נזילה לא מנייתית">
+            
+				<div  class="lbldiv">סכום ריבית צבורה (בהלוואות בלון)</div>
+                <input oninput="formatNumber(this)" type="text" id="ribitzvora" placeholder="הקלד סכום הלוואה"  >
+                
+				<div  class="lbldiv">סכום משיכה נדרש</div>
+                <input oninput="formatNumber(this)" type="text" id="requiredWithdrawalAmount" placeholder="הקלד סכום משיכה נדרש">
+            
+
+            <div class="buttons">
+                <button id="submitdata" class="submitdata" type="button" onclick=" calculateWithdrawalAmount()">חשב</button>
+                <button id="clearall" class="clearall" type="button" onclick="chng()">נקה תוצאה</button>
+            </div>
+        </div>
+
+        <div class="alltables" style="margin-top: 30px;">
+            <h2 id="tozaa" >תוצאה:</h2>
+            <table  id="tbltozaa" border="1" style="border-collapse: collapse;">
+                <tr>
+                    <th class="kotkot" >הסעיף</th>
+                    <th class="kotkot" >סכום</th>
+
+                </tr>
+                <tr>
+                    <td class="tdnos" >ניתן לשלם מקסימום </td>
+                    <td  class="tdtoz" id="maxPaymentAmountResult" ></td>
+                </tr>
+				<tr>
+                    <td class="tdnos" >ניתן לשלם ללא שבירה </td>
+                    <td  class="tdtoz" id="maxPaymentAmountResultShvira" ></td>
+                </tr>
+				
+				
+                <tr>
+                    <td class="tdnos" >ניתן לשלם ללא פרעון הלוואות</td>
+                    <td class="tdtoz" id="withdrawalAmountResult" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" >תשלום נטו למבוטח</td>
+                    <td class="tdtoz" id="withdrawalneto" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" >סכום למשיכה בפועל</td>
+                    <td class="tdtoz" id="schomLeMeshihaBafoal" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" > למשיכה מהנזיל מנייתי</td>
+                    <td class="tdtoz" id="nimshachMenayati" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" > למשיכה מהנזיל לא מנייתי</td>
+                    <td class="tdtoz" id="nimshachLoMenayati" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" >סכום לקיזוז מההלוואה</td>
+                    <td class="tdtoz" id="schomLePeron" ></td>
+                </tr>
+            </table>
+
+            <h2 id="aftertozaa" >יתרות לאחר משיכה:</h2>
+            <table  id="tbltAfter" border="1" >
+                <tr>
+                    <th class="kotkot"  >הסעיף</th>
+                    <th class="kotkot" >יתרה</th>
+                </tr>
+                <tr>
+                    <td class="tdnos" >יתרת צבירה </td>
+                    <td  class="tdtoz" id="zviraAfter" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" >יתרת הלוואה</td>
+                    <td class="tdtoz" id="yitratHalvaaAfter" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" >יתרה לא נזיל</td>
+                    <td class="tdtoz" id="yitratLoNazilAfter" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" >יתרה נזיל מנייתי</td>
+                    <td class="tdtoz" id="yitraNazilMenayotAfter" ></td>
+                </tr>
+                <tr>
+                    <td class="tdnos" > יתרה נזיל לא מנייתי</td>
+                    <td class="tdtoz" id="yitraNazilLOMenayotAfter" ></td>
+                </tr>
+                
+            </table>
+        </div>
+    </div>
+
+    <script>
+		const shiurNazilM=0.60;
+const shiurNazilLm=0.75;
+const shiurLoNazil=0.30;
+function calculateWithdrawalAmount() {
+    
+	document.getElementById("maxPaymentAmountResult").textContent ="";
+    document.getElementById("withdrawalAmountResult").textContent ="";
+    document.getElementById("withdrawalneto").textContent = "";
+    document.getElementById("schomLeMeshihaBafoal").textContent = "";
+    document.getElementById("nimshachMenayati").textContent ="";
+    document.getElementById("nimshachLoMenayati").textContent = "";
+    document.getElementById("schomLePeron").textContent = "";
+
+	
+    
+    // קריאה לערכים מהקלט של המשתמש
+    const zvira = parseFloat(document.getElementById("zvira").value.replace(/[^0-9.]/g, ""));
+    const yitratHalvaa = parseFloat(document.getElementById("loanAmount").value.replace(/[^0-9.]/g, ""));
+    let yitratLoNazil = parseFloat(document.getElementById("illiquidBalance").value.replace(/[^0-9.]/g, ""));
+    let yitraNazilLOMenayot = parseFloat(document.getElementById("liquidBalanceNonStock").value.replace(/[^0-9.]/g, ""));
+    let yitraNazilMenayot = parseFloat(document.getElementById("liquidBalanceStock").value.replace(/[^0-9.]/g, ""));
+    const requestedAmount = parseFloat(document.getElementById("requiredWithdrawalAmount").value.replace(/[^0-9.]/g, "")); 
+	let ribitzvora = parseFloat(document.getElementById("ribitzvora").value.replace(/[^0-9.]/g, "")); 
+
+    if(!yitratHalvaa || !zvira || !requestedAmount){alert('נדרש למלא נתונים - שדה ריק למלא ב 0');return;
+        } 
+	if(!ribitzvora){ribitzvora=0};
+	if(!yitratLoNazil){yitratLoNazil=0};
+	if(!yitraNazilLOMenayot){yitraNazilLOMenayot=0};
+	if(!yitraNazilMenayot){yitraNazilMenayot=0};
+	
+	
+	
+     if(zvira!==yitratLoNazil+yitraNazilLOMenayot+yitraNazilMenayot){
+        alert('סכום יתרה אינו תואם לפירוט');return; 
+     } 
+	 
+    // חישוב maxLeHalvaa
+    const maxLeHalvaa = (yitratLoNazil * shiurLoNazil) + (yitraNazilMenayot * shiurNazilM) + (yitraNazilLOMenayot * shiurNazilLm);
+
+    // חישוב sumHalvaotLoNazil
+    const sumHalvaotLoNazil = yitratLoNazil * shiurLoNazil;
+
+    // חישוב yitraHalvaaNazilLOMenayot
+    const yitraHalvaaNazilLOMenayot = yitraNazilLOMenayot * shiurNazilLm;
+
+    // חישוב yitraLeMeshichaMax (המקסימום למשיכה מתוך החישובים הקודמים)
+    const yitraLeMeshichaMax = sumHalvaotLoNazil - yitratHalvaa+yitraNazilLOMenayot+yitraNazilMenayot;
+	
+	if (yitraLeMeshichaMax<ribitzvora){alert('אין יתרה למשיכה - יתרת ריבית צבורה גבוהה מסכום למשיכה מקסימלי');return;}
+    if (requestedAmount<ribitzvora){alert('סכום מבוקש נמוך מריבית צבורה - לא ניתן לבצע');return;}
+   
+    // הצגת סכום מקסימום לתשלום
+    document.getElementById("maxPaymentAmountResult").textContent = Math.max(yitraLeMeshichaMax,0).toLocaleString("he-IL");
+    if(Number(yitraLeMeshichaMax)<=0){alert('אין יתרה פניוה למשיכה');return;}
+    let amountForWithdrawalNoLoanRepayment = 0; // ערך ברירת מחדל
+
+    // תנאים לחישוב amountForWithdrawalNoLoanRepayment
+    if (maxLeHalvaa < yitratHalvaa) {
+        amountForWithdrawalNoLoanRepayment = 0;
+    } else if (sumHalvaotLoNazil > yitratHalvaa) {
+        amountForWithdrawalNoLoanRepayment = yitraLeMeshichaMax;
+    } else if (yitraHalvaaNazilLOMenayot >= (yitratHalvaa - sumHalvaotLoNazil)) {
+        amountForWithdrawalNoLoanRepayment = yitraNazilLOMenayot - (yitratHalvaa - sumHalvaotLoNazil) / shiurNazilLm + yitraNazilMenayot;
+    } else if (yitraHalvaaNazilLOMenayot < (yitratHalvaa - sumHalvaotLoNazil)) {
+        amountForWithdrawalNoLoanRepayment = yitraNazilMenayot - (yitratHalvaa - sumHalvaotLoNazil - yitraHalvaaNazilLOMenayot) / shiurNazilM;
+    }
+
+    // הצגת סכום למשיכה ללא פרעון הלוואות
+    document.getElementById("withdrawalAmountResult").textContent = amountForWithdrawalNoLoanRepayment.toLocaleString("he-IL");
+    document.getElementById("withdrawalneto").textContent = Math.max(Math.min(requestedAmount, yitraLeMeshichaMax),0).toLocaleString("he-IL");
+
+
+
+var schomLeMeshihaBafoal;
+var schomLePeron;
+var nimshachLoMenayati;
+var nimshachMenayati;
+var schomlemeshich;
+
+if (requestedAmount < amountForWithdrawalNoLoanRepayment) {
+    schomLeMeshihaBafoal = requestedAmount;
+    schomLePeron = 0;
+
+    if (yitraNazilLOMenayot > schomLeMeshihaBafoal) {
+        nimshachLoMenayati = schomLeMeshihaBafoal;
+        nimshachMenayati = 0;
+    } else {
+        nimshachLoMenayati = yitraNazilLOMenayot;
+        nimshachMenayati = schomLeMeshihaBafoal - nimshachLoMenayati;
+    }
+
+} else if (requestedAmount > yitraLeMeshichaMax) {
+    schomLeMeshihaBafoal = yitraNazilLOMenayot + yitraNazilMenayot;
+    schomLePeron = yitratHalvaa - sumHalvaotLoNazil;
+
+    nimshachLoMenayati = yitraNazilLOMenayot;
+    nimshachMenayati = yitraNazilMenayot;
+
+} else {
+    if (yitratHalvaa > maxLeHalvaa) {
+        if ((yitraNazilMenayot - (yitratHalvaa - maxLeHalvaa) / (1 - shiurNazilM)) * (1 - shiurNazilM) >= requestedAmount) {
+            nimshachMenayati = (yitratHalvaa - maxLeHalvaa + requestedAmount) / (1 - shiurNazilM);
+            nimshachLoMenayati = 0;
+            schomLePeron = nimshachMenayati-requestedAmount;
+        } else  {
+            nimshachMenayati = yitraNazilMenayot;
+            nimshachLoMenayati = (requestedAmount +yitratHalvaa - maxLeHalvaa - yitraNazilMenayot* (1 - shiurNazilM))   / (1 - shiurNazilLm);
+            schomLePeron = nimshachMenayati + nimshachLoMenayati - requestedAmount;
+        } 
+    } else if (yitratHalvaa <= maxLeHalvaa && amountForWithdrawalNoLoanRepayment == 0) {
+        if (yitraNazilMenayot * (1 - shiurNazilM) >= requestedAmount) {
+            nimshachMenayati = requestedAmount / (1 - shiurNazilM);
+            nimshachLoMenayati = 0;
+            schomLePeron = requestedAmount / (1 - shiurNazilM) * shiurNazilM;
+        } else if (yitraNazilMenayot * (1 - shiurNazilM) < requestedAmount) {
+            nimshachMenayati = yitraNazilMenayot;
+            nimshachLoMenayati = (requestedAmount - yitraNazilMenayot * (1 - shiurNazilM)) / (1 - shiurNazilLm);
+            schomLePeron = yitraNazilMenayot * shiurNazilM + (requestedAmount - yitraNazilMenayot * (1 - shiurNazilM)) / (1 - shiurNazilLm) * shiurNazilLm;
+        }
+    } else if (yitratHalvaa <= maxLeHalvaa && amountForWithdrawalNoLoanRepayment > 0) {
+        if (yitraNazilMenayot < amountForWithdrawalNoLoanRepayment) {
+            nimshachMenayati = yitraNazilMenayot;
+            nimshachLoMenayati = amountForWithdrawalNoLoanRepayment - yitraNazilMenayot + (requestedAmount - amountForWithdrawalNoLoanRepayment) / (1 - shiurNazilLm);
+            schomLePeron = (requestedAmount - amountForWithdrawalNoLoanRepayment) / (1 - shiurNazilLm) * shiurNazilLm;
+        } else if ((yitraNazilMenayot - amountForWithdrawalNoLoanRepayment) * (1 - shiurNazilM) + amountForWithdrawalNoLoanRepayment >= requestedAmount) {
+            nimshachLoMenayati = 0;
+            nimshachMenayati = amountForWithdrawalNoLoanRepayment + (requestedAmount - amountForWithdrawalNoLoanRepayment) / (1 - shiurNazilM);
+            schomLePeron = (requestedAmount - amountForWithdrawalNoLoanRepayment) / (1 - shiurNazilM) * shiurNazilM;
+        } else if ((yitraNazilMenayot - amountForWithdrawalNoLoanRepayment) * (1 - shiurNazilM) + amountForWithdrawalNoLoanRepayment < requestedAmount) {
+            nimshachMenayati = yitraNazilMenayot;
+            nimshachLoMenayati = (requestedAmount - amountForWithdrawalNoLoanRepayment - (yitraNazilMenayot - amountForWithdrawalNoLoanRepayment) * (1 - 0.6)) / (1 - shiurNazilLm);
+            schomLePeron = (yitraNazilMenayot - amountForWithdrawalNoLoanRepayment) * shiurNazilM + nimshachLoMenayati * shiurNazilLm;
+        }
+    }
+}
+schomlemeshich=nimshachMenayati+nimshachLoMenayati;
+document.getElementById("schomLeMeshihaBafoal").textContent = schomlemeshich.toLocaleString("he-IL");
+document.getElementById("nimshachMenayati").textContent = nimshachMenayati.toLocaleString("he-IL");
+document.getElementById("nimshachLoMenayati").textContent = nimshachLoMenayati.toLocaleString("he-IL");
+document.getElementById("schomLePeron").textContent = schomLePeron.toLocaleString("he-IL");
+document.getElementById("tozaa").scrollIntoView({ behavior: "smooth" });
+document.getElementById("tbltozaa").style.display = "block";
+document.getElementById("tozaa").style.display = "block";
+document.getElementById("clearall").style.display = "block";
+document.getElementById("tbltAfter").style.display = "block";
+document.getElementById("aftertozaa").style.display = "block";
+
+
+let zviraAfter;
+let yitratHalvaaAfter;
+let yitratLoNazilAfter;
+let yitraNazilLOMenayotAfter;
+let yitraNazilMenayotAfter;
+
+if(schomlemeshich) {zviraAfter=zvira-schomlemeshich}
+else {zviraAfter=zvira;}
+
+if(schomLePeron)   {yitratHalvaaAfter=yitratHalvaa-schomLePeron} else {yitratHalvaaAfter=yitratHalvaa;}
+yitratLoNazilAfter=yitratLoNazil;
+if(nimshachLoMenayati) {yitraNazilLOMenayotAfter=yitraNazilLOMenayot-nimshachLoMenayati} else {yitraNazilLOMenayotAfter=yitraNazilLOMenayot;}
+if (nimshachMenayati) {yitraNazilMenayotAfter=yitraNazilMenayot-nimshachMenayati} else {yitraNazilMenayotAfter=yitraNazilMenayot;}
+
+document.getElementById("zviraAfter").textContent = zviraAfter.toLocaleString("he-IL");
+document.getElementById("yitratHalvaaAfter").textContent = yitratHalvaaAfter.toLocaleString("he-IL");
+document.getElementById("yitratLoNazilAfter").textContent = yitratLoNazilAfter.toLocaleString("he-IL");
+document.getElementById("yitraNazilLOMenayotAfter").textContent = yitraNazilLOMenayotAfter.toLocaleString("he-IL");
+document.getElementById("yitraNazilMenayotAfter").textContent = yitraNazilMenayotAfter.toLocaleString("he-IL");
+
+}
+function formatNumber(input) {
+    // הסרת כל תווים שאינם ספרות
+    const numericValue = input.value.replace(/[^\d]/g, '');
+  
+    // המרת המספר לעיצוב עם פסיקים
+    const formattedValue = numericValue ? parseInt(numericValue, 10).toLocaleString() : '';
+  
+    // עדכון השדה עם הערך המעוצב
+    input.value = formattedValue;
+  }
+function chng(){
+    document.getElementById("tbltozaa").style.display = "none";
+    document.getElementById("tozaa").style.display = "none";
+    document.getElementById("clearall").style.display = "none";
+    document.getElementById("tbltAfter").style.display = "none";
+    document.getElementById("aftertozaa").style.display = "none";
+    document.getElementById("maxPaymentAmountResult").textContent ="";
+    document.getElementById("withdrawalAmountResult").textContent ="";
+    document.getElementById("withdrawalneto").textContent = "";
+    document.getElementById("schomLeMeshihaBafoal").textContent = "";
+    document.getElementById("nimshachMenayati").textContent ="";
+    document.getElementById("nimshachLoMenayati").textContent = "";
+    document.getElementById("schomLePeron").textContent = "";       
+}
+	</script>
+</body>
+</html>
