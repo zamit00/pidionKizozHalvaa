@@ -136,10 +136,10 @@ if (requestedAmount < amountForWithdrawalNoLoanRepayment) {
     }
 }
 schomlemeshich=nimshachMenayati+nimshachLoMenayati;
-document.getElementById("schomLeMeshihaBafoal").textContent = schomlemeshich.toLocaleString("he-IL");
-document.getElementById("nimshachMenayati").textContent = nimshachMenayati.toLocaleString("he-IL");
-document.getElementById("nimshachLoMenayati").textContent = nimshachLoMenayati.toLocaleString("he-IL");
-document.getElementById("schomLePeron").textContent = schomLePeron.toLocaleString("he-IL");
+document.getElementById("schomLeMeshihaBafoal").textContent = Math.round(schomlemeshich).toLocaleString("he-IL");
+document.getElementById("nimshachMenayati").textContent = Math.round(nimshachMenayati).toLocaleString("he-IL");
+document.getElementById("nimshachLoMenayati").textContent = Math.round(nimshachLoMenayati).toLocaleString("he-IL");
+document.getElementById("schomLePeron").textContent =Math.round(schomLePeron).toLocaleString("he-IL");
 document.getElementById("tozaa").scrollIntoView({ behavior: "smooth" });
 document.getElementById("tbltozaa").style.display = "block";
 document.getElementById("tozaa").style.display = "block";
@@ -162,11 +162,11 @@ yitratLoNazilAfter=yitratLoNazil;
 if(nimshachLoMenayati) {yitraNazilLOMenayotAfter=yitraNazilLOMenayot-nimshachLoMenayati} else {yitraNazilLOMenayotAfter=yitraNazilLOMenayot;}
 if (nimshachMenayati) {yitraNazilMenayotAfter=yitraNazilMenayot-nimshachMenayati} else {yitraNazilMenayotAfter=yitraNazilMenayot;}
 
-document.getElementById("zviraAfter").textContent = zviraAfter.toLocaleString("he-IL");
-document.getElementById("yitratHalvaaAfter").textContent = yitratHalvaaAfter.toLocaleString("he-IL");
-document.getElementById("yitratLoNazilAfter").textContent = yitratLoNazilAfter.toLocaleString("he-IL");
-document.getElementById("yitraNazilLOMenayotAfter").textContent = yitraNazilLOMenayotAfter.toLocaleString("he-IL");
-document.getElementById("yitraNazilMenayotAfter").textContent = yitraNazilMenayotAfter.toLocaleString("he-IL");
+document.getElementById("zviraAfter").textContent = Math.round(zviraAfter).toLocaleString("he-IL");
+document.getElementById("yitratHalvaaAfter").textContent =Math.round(yitratHalvaaAfter).toLocaleString("he-IL");
+document.getElementById("yitratLoNazilAfter").textContent = Math.round(yitratLoNazilAfter).toLocaleString("he-IL");
+document.getElementById("yitraNazilLOMenayotAfter").textContent =Math.round(yitraNazilLOMenayotAfter).toLocaleString("he-IL");
+document.getElementById("yitraNazilMenayotAfter").textContent = Math.round(yitraNazilMenayotAfter).toLocaleString("he-IL");
 
 }
 function formatNumber(input) {
