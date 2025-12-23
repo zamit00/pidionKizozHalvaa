@@ -1,0 +1,80 @@
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: right;
+	height:auto;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	
+}
+h1{color:darkblue; text-align:center;width:100vw;
+margin-bottom:0px;}
+h2{color:green;text-align:center;width:100vw;margin-bottom:10px;}
+.container{display:flex;
+	flex-direction:column;
+	align-items:center;
+	width:100vw;
+	height:auto;
+	background-color:#f9f9f9
+	}
+
+#loanForm{width:100vw;height:auto;
+	display:flex;
+	flex-direction:column;
+	align-items:center;}
+.lbldiv,input{width:50vw;height:30px;text-align:center;font-size:16px;box-sizing:border-box;
+max-width:640px;}
+input{margin-bottom:15px;display:flex;align-items:center;}
+.lbldiv{background-color:blue;color:white;line-height:30px;vertical-align:middle;}
+
+.buttons{width:50vw;display:flex;justify-content:center;max-width:640px;}
+	
+#submitdata{width:120px;height:30px;background-color:green;color:white;border:none;margin-left:50px;}
+#clearall{width:120px;height:30px;background-color:orange;color:white;border:none;}
+
+.alltables{display:flex;
+	flex-direction:column;
+	align-items:center;
+	width:50vw;
+	height:auto;
+	background-color:#f9f9f9;
+	max-width:640px;}
+
+table, tr{width:50vw;border-collapse:collapse;max-width:600px;}
+.kotkot{background-color:blue;color:white;line-height:30px;vertical-align:middle;text-align:center;}
+.tdnos{width:35vw;padding-right:10px;max-width:480px;}
+.tdtoz{width:15vw;text-align:center;max-width:160px;}
+
+#clearall,#tozaa,#tbltozaa,#aftertozaa,#tbltAfter{display:none;}
+@media only screen and (max-width:992px){
+		.lbldiv,input,.buttons,.alltables, table, tr{width:60vw;max-width:640px;}
+	.tdnos{width:53.5vw;max-width:480px;}
+	.tdtoz{width:17.5vw;max-width:160px;}
+}
+@media only screen and (max-width:600px){
+		.lbldiv,input,.buttons,.alltables, table, tr{width:90vw;}
+	.tdnos{width:67.5vw;max-width:480px;}
+	.tdtoz{width:22.5vw;max-width:160px;}
+}
+
+/* halstyle.css 
+
+
+
+
+
+
+
+
+input,.lbldiv{box-sizing:border-box;
+width:400px;padding:5px 16px; text-align:center;}
+.buttons{margin-top:15px;width:600px;}
+
+.lbldiv{background-color:blue;color:white;}	
+
+*/
